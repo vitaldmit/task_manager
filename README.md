@@ -43,13 +43,26 @@ pytest tests/
 ## Структура проекта
 ```
 task_manager/
+│
 ├── src/
 │   ├── models/
+│   │   └── task.py
 │   ├── services/
+│   │   ├── task_manager.py
+│   │   └── file_handler.py
 │   ├── utils/
+│   │   └── constants.py
 │   └── cli/
+│       └── interface.py
+│
 ├── tests/
+│   ├── test_task.py
+│   ├── test_task_manager.py
+│   └── test_file_handler.py
+│
 ├── data/
+│   └── tasks.json
+│
 ├── requirements.txt
 ├── README.md
 └── main.py
