@@ -11,7 +11,7 @@ class Task:
     due_date: datetime
     priority: str
     status: str = "Не выполнена"
-    
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -22,7 +22,7 @@ class Task:
             "priority": self.priority,
             "status": self.status
         }
-    
+
     @classmethod
     def from_dict(cls, data: dict) -> 'Task':
         data['due_date'] = datetime.fromisoformat(data['due_date'])

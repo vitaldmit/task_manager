@@ -1,3 +1,5 @@
+""" Модуль для работы с интерфейсом CLI-приложения """
+
 from datetime import datetime
 
 from src.services.task_manager import TaskManager
@@ -5,12 +7,17 @@ from src.models.task import Task
 from src.utils.constants import PRIORITIES, STATUSES, CATEGORIES
 
 
-
 class TaskManagerCLI:
+    """
+    Класс для работы с интерфейсом CLI-приложения
+    """
     def __init__(self):
         self.task_manager = TaskManager()
 
     def display_menu(self):
+        """
+        Отображает главное меню CLI-приложения
+        """
         print("\n=== Менеджер задач ===")
         print("1. Просмотр всех задач")
         print("2. Добавить задачу")
@@ -20,10 +27,13 @@ class TaskManagerCLI:
         print("0. Выход")
 
     def run(self):
+        """
+        Запускает CLI-приложение
+        """
         while True:
             self.display_menu()
             choice = input("\nВыберите действие: ")
-            
+
             actions = {
                 "1": self.show_tasks,
                 "2": self.add_task,
@@ -32,7 +42,7 @@ class TaskManagerCLI:
                 "5": self.search_tasks,
                 "0": exit
             }
-            
+
             action = actions.get(choice)
             if action:
                 action()
@@ -40,22 +50,28 @@ class TaskManagerCLI:
                 print("Неверный выбор. Попробуйте снова.")
 
     def show_tasks(self):
+        """
+        Отображает список задач
+        """
         if not self.task_manager.tasks:
             print("Список задач пуст")
             return
-        
+
         for task in self.task_manager.tasks:
             self._print_task(task)
 
     def add_task(self):
+        """
+        Добавляет новую задачу
+        """
         title = input("Название задачи: ")
         description = input("Описание задачи: ")
-        
+
         print("\nДоступные категории:", ", ".join(CATEGORIES))
         category = input("Категория: ")
-        
+
         due_date = input("Срок выполнения (ГГГГ-ММ-ДД): ")
-        
+
         print("\nПриоритеты:", ", ".join(PRIORITIES))
         priority = input("Приоритет: ")
 
@@ -74,6 +90,9 @@ class TaskManagerCLI:
             print(f"Ошибка при создании задачи: {e}")
 
     def _print_task(self, task: Task):
+        """
+        Выводит меню при редактировании задачи
+        """
         print(f"\nID: {task.id}")
         print(f"Название: {task.title}")
         print(f"Описание: {task.description}")
@@ -84,9 +103,12 @@ class TaskManagerCLI:
         print("-" * 30)
 
     def edit_task(self):
+        """
+        Редактирует задачу
+        """
         task_id = int(input("Введите ID задачи для редактирования: "))
         task = self.task_manager.get_task_by_id(task_id)
-        
+
         if not task:
             print("Задача не найдена")
             return
@@ -97,16 +119,16 @@ class TaskManagerCLI:
 
         title = input("Название задачи: ") or task.title
         description = input("Описание задачи: ") or task.description
-        
+
         print("\nДоступные категории:", ", ".join(CATEGORIES))
         category = input("Категория: ") or task.category
-        
+
         due_date_str = input("Срок выполнения (ГГГГ-ММ-ДД): ")
         due_date = datetime.fromisoformat(due_date_str) if due_date_str else task.due_date
-        
+
         print("\nПриоритеты:", ", ".join(PRIORITIES))
         priority = input("Приоритет: ") or task.priority
-        
+
         print("\nСтатусы:", ", ".join(STATUSES))
         status = input("Статус: ") or task.status
 
@@ -121,16 +143,19 @@ class TaskManagerCLI:
         print("Задача успешно обновлена!")
 
     def delete_task(self):
+        """
+        Удаляет задачу
+        """
         task_id = int(input("Введите ID задачи для удаления: "))
         task = self.task_manager.get_task_by_id(task_id)
-        
+
         if not task:
             print("Задача не найдена")
             return
 
         self._print_task(task)
         confirm = input("Вы уверены, что хотите удалить эту задачу? (да/нет): ")
-        
+
         if confirm.lower() == 'да':
             self.task_manager.tasks = [t for t in self.task_manager.tasks if t.id != task_id]
             self.task_manager.save_tasks()
@@ -139,13 +164,16 @@ class TaskManagerCLI:
             print("Удаление отменено")
 
     def search_tasks(self):
+        """
+        Выполняет поиск задач
+        """
         print("\nПоиск задач:")
         print("1. По ключевому слову")
         print("2. По категории")
         print("3. По статусу")
-        
+
         choice = input("Выберите тип поиска: ")
-        
+
         if choice == "1":
             keyword = input("Введите ключевое слово: ").lower()
             results = [
