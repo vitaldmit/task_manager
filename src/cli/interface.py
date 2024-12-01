@@ -1,5 +1,6 @@
 """ Модуль для работы с интерфейсом CLI-приложения """
 
+import re
 from datetime import datetime
 
 from src.services.task_manager import TaskManager
@@ -65,15 +66,25 @@ class TaskManagerCLI:
         Добавляет новую задачу
         """
         title = input("Название задачи: ")
+        if not title:
+            print("Название задачи не может быть пустым")
+            return
+
         description = input("Описание задачи: ")
 
         print("\nДоступные категории:", ", ".join(CATEGORIES))
         category = input("Категория: ")
 
         due_date = input("Срок выполнения (ГГГГ-ММ-ДД): ")
+        if not re.match(r'^\d{4}-\d{2}-\d{2}$', due_date):
+            print("Неверный формат даты. Используйте формат ГГГГ-ММ-ДД")
+            return
 
         print("\nПриоритеты:", ", ".join(PRIORITIES))
         priority = input("Приоритет: ")
+        if priority not in PRIORITIES:
+            print("Неверный приоритет. Выберите из списка:", ", ".join(PRIORITIES))
+            return
 
         try:
             task = Task(
